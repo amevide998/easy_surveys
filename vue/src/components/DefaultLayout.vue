@@ -15,7 +15,7 @@
                                     :to="item.to"
                                     active-class="bg-gray-900 text-white"
                                     :class="[
-                                        this.$route.name === item.to.name
+                                        $route.name === item.to.name
                                     ? ''
                                     : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']"
                                     >{{ item.name }}
@@ -73,7 +73,7 @@
                         :to="item.to"
                         active-class="bg-gray-900 text-white"
                         :class="[
-                            this.$route.name === item.to.name
+                            $route.name === item.to.name
                             ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']"
                     >{{ item.name }}</router-link>
                 </div>
