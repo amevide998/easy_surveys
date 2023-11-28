@@ -12,7 +12,11 @@ const store = createStore({
   },
   getters: {},
   actions: {},
-  mutations:{},
+  mutations:{
+    logout: state => {
+      state.user = {}
+    }
+  },
   modules: {}
 })
 
