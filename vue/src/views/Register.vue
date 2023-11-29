@@ -91,15 +91,12 @@ const user = {
     password_confirmation: ''
 }
 
-function register(ev){
+async function register(ev){
     ev.preventDefault()
-    store
-        .dispatch('register', user)
-        .then(() => {
-            router.push({
-                name: 'Dashboard'
-            })
-        })
+    await store.dispatch('register', user)
+    await router.push({
+        name: 'Dashboard'
+    })
 }
 </script>
 
