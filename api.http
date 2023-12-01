@@ -1,0 +1,11 @@
+POST localhost:8000/api/register
+Content-Type: application/json
+
+{
+    "name": "nametest",
+    "email": "example@gmail.com",
+    "password": "Amevid"
+}
+
+###
+GET localhost:8000/api/test
