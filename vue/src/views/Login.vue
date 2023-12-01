@@ -5,11 +5,17 @@
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form class="space-y-6" action="#" method="POST">
+            <form class="space-y-6" @submit="login">
                 <div>
                     <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
                     <div class="mt-2">
-                        <input id="email" name="email" type="email" autocomplete="email" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                        <input id="email"
+                               name="email"
+                               type="email"
+                               autocomplete="email"
+                               required=""
+                               v-model="user.email"
+                               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                     </div>
                 </div>
 
@@ -21,7 +27,27 @@
                         </div>
                     </div>
                     <div class="mt-2">
-                        <input id="password" name="password" type="password" autocomplete="current-password" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                        <input id="password"
+                               name="password"
+                               type="password"
+                               autocomplete="current-password"
+                               required=""
+                               v-model="user.password"
+                               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                    </div>
+                </div>
+                <div>
+                    <div class="mt-2">
+                        <input id="remember"
+                               name="remember"
+                               type="checkbox"
+                               autocomplete="remember"
+                               v-model="user.remember"
+                               class="h-4 w-4 rounded text-indigo-600 focus:ring-indigo-600 border-gray-300 mr-2"
+                        />
+                        <label for="remember">
+                            Remember Me
+                        </label>
                     </div>
                 </div>
 
@@ -40,10 +66,27 @@
         </div>
 </template>
 
-<script>
-export default {
-    name: "Login"
+<script setup>
+import store from "../store/index.js"
+import {useRouter} from "vue-router"
+
+const user = {
+    email : '',
+    password: '',
+    remember: false
 }
+
+const router = useRouter()
+
+async function login(ev){
+    ev.preventDefault()
+    await store.dispatch('login', user)
+    await router.push({
+        name: 'Dashboard'
+    })
+
+}
+
 </script>
 
 <style scoped>
