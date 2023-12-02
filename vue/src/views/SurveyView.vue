@@ -2,11 +2,13 @@
 import PageComponent from "../components/PageComponent.vue";
 import {ref} from "vue";
 import store from "../store/index.js";
-import {useRoute} from "vue-router";
-import router from "../router/index.js";
+import {useRoute, useRouter} from "vue-router";
+import QuestionEditor from "../components/editor/QuestionEditor.vue";
+import {v4} from "uuid";
 
 
-const route = useRoute();
+const route = useRoute()
+const router = useRouter()
 
 // create empty survey
 let model = ref({
@@ -24,6 +26,40 @@ if(route.params.id){
     );
 }
 
+function addQuestion(index){
+    const newQuestion = {
+        id: v4(),
+        type: 'text',
+        question: '',
+        description: null,
+        data: {}
+    }
+
+    model.value.questions.splice(index, 0, newQuestion)
+}
+
+function deleteQuestion(question){
+    model.value.questions = model.value.questions.filter(q => q.id !== question.id)
+}
+
+function questionChange(question){
+    model.value.questions = model.value.questions.map(q=> {
+        if(q.id === question.id){
+            return JSON.parse(JSON.stringify(question))
+        }
+        return q
+    })
+}
+
+async function saveSurvey(){
+    const {data} = await store.dispatch('saveSurvey', model.value)
+    await router.push({
+        name: 'SurveyView',
+        params: {
+            id: data.data.id
+        }
+    })
+}
 </script>
 
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
@@ -148,18 +184,25 @@ if(route.params.id){
 
 <!--                    Survey Fields-->
                     <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-                        <h3 class="text-2xl font-semibold flex items-center justify-between">
+                        <h3 class="text-xl font-semibold flex items-center justify-between">
                             <button>
                                 Questions
-
                             </button>
-                            <div>
+                            <div class="cursor-pointer border border-gray-300 py-2 px-3 rounded-md hover:bg-gray-300">
                                 + Add Question
                             </div>
                         </h3>
                         <div v-if="!model.questions.length" class="text-center text-gray-600">
                             You Dont Have any questions yet
-
+                        </div>
+                        <div v-for="(question, index) in model.questions" :key="question.id">
+                            <QuestionEditor
+                                :question="question"
+                                :index="index"
+                                @change="questionChange"
+                                @addQuestion="addQuestion"
+                                @deleteQuestion="deleteQuestion"
+                            />
                         </div>
                     </div>
                     <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
