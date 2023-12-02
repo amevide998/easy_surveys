@@ -26,6 +26,19 @@ if(route.params.id){
     );
 }
 
+function onChooseImageFile(ev){
+    const file = ev.target.files[0]
+    const reader = new FileReader()
+
+    // callback on load
+    reader.onload = () => {
+        model.value.image = reader.result
+        model.value.image_url = reader.result
+    }
+
+    reader.readAsDataURL(file)
+}
+
 function addQuestion(index){
     const newQuestion = {
         id: v4(),
@@ -82,8 +95,8 @@ async function saveSurvey(){
                         </label>
                         <div class="mt-1 flex items-center">
                             <img
-                                v-if="model.image"
-                                :src="model.image"
+                                v-if="model.image_url"
+                                :src="model.image_url"
                                 :alt="model.image"
                                 class="w-64 h-48 object-cover"
                             >
@@ -99,7 +112,9 @@ async function saveSurvey(){
                             >
                                 <input
                                     class="absolute top-0 right-0 left-0 bottom-0 opacity-0 cursor-pointer"
-                                    type="file">
+                                    type="file"
+                                    @change="onChooseImageFile"
+                                >
                                 Change
                             </button>
                         </div>
