@@ -27,17 +27,28 @@ const store = createStore({
         commit('setUser', data)
         return data
       }catch (err){
-        console.log('cek error in store')
         throw err
       }
 
     },
+
+    async logout({commit}){
+      try {
+        const response = await axiosClient.post('logout')
+        commit('logout')
+        return response
+      }catch (err){
+        console.log('err - store/index/actions/logout, errmsg : ', err)
+        throw err
+      }
+    }
 
   },
   mutations:{
     logout: state => {
       state.user.data = {}
       state.user.token = null
+      sessionStorage.clear()
     },
     setUser: (state, userData) => {
       state.user.token = userData.token
