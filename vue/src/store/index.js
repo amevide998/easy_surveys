@@ -11,15 +11,26 @@ const store = createStore({
   getters: {},
   actions: {
     async register({commit}, user){
-      const  {data} = await axiosClient.post('/register', user)
-      commit('setUser', data)
-      return data
+      try {
+        const  {data} = await axiosClient.post('/register', user)
+        commit('setUser', data)
+        return data
+      }catch (err){
+        throw err
+      }
+
     },
     async login({commit}, user){
-      const  {data} = await axiosClient.post('/login', user)
-      // const data = response.data
-      commit('setUser', data)
-      return data
+      try {
+        const  {data} = await axiosClient.post('/login', user)
+        // const data = response.data
+        commit('setUser', data)
+        return data
+      }catch (err){
+        console.log('cek error in store')
+        throw err
+      }
+
     },
 
   },
