@@ -118,9 +118,9 @@ import {useRouter} from "vue-router";
 const store = useStore()
 const router = useRouter()
 
-const logout = () => {
-    store.commit('logout')
-    router.push({
+const logout = async () => {
+    await store.dispatch('logout')
+    await router.push({
         name: 'Login'
     })
 }
