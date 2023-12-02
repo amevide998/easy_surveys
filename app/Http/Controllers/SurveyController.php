@@ -7,7 +7,8 @@ use App\Http\Requests\UpdateSurveyRequest;
 use App\Http\Resources\SurveyResource;
 use App\Models\Survey;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class SurveyController extends Controller
 {
@@ -27,7 +28,14 @@ class SurveyController extends Controller
     public function store(StoreSurveyRequest $request)
     {
         //
-        $result = Survey::create($request->validated());
+        $req = $request->validated();
+
+        if(isset($req['image'])){
+            $image_url = $this->saveImage($req['image']);
+            $req['image'] = $image_url;
+        }
+
+        $result = Survey::create($req);
         return new SurveyResource($result);
 
     }
@@ -68,5 +76,41 @@ class SurveyController extends Controller
 
         $survey->delete();
         return response('', 204);
+    }
+
+    private function saveImage($image){
+        if(preg_match('/^data:image\/(\w+);base64,/', $image, $type)){
+            $image = substr($image, strpos($image, ',') + 1);
+
+            $type = strtolower($type[1]);
+
+            // check if type is valid image
+            if(!in_array($type, ['jpg', 'jpeg', 'gif', 'png'])){
+                throw new \Exception('invalid image type');
+            }
+
+            $image = str_replace(' ', '+', $image);
+            $image = base64_decode($image);
+
+            if($image === false){
+                throw  new \Exception('base64 decode failed');
+            }
+
+        }else{
+            throw new \Exception('didnt match data uri with image data');
+        }
+
+        $dir = 'images/';
+        $file = Str::random() . '.' . $type;
+        $absolutePath = public_path($dir);
+        $relativePath = $dir .  $file;
+
+        if(!File::exists($absolutePath)){
+            File::makeDirectory($absolutePath, 0755, true);
+        }
+
+        file_put_contents($relativePath, $image);
+
+        return $relativePath;
     }
 }
