@@ -87,10 +87,25 @@ const store = createStore({
       data: {},
       token: sessionStorage.getItem('TOKEN')
     },
-    surveys: [...tmpSurveys]
+    surveys: [...tmpSurveys],
+    questionTypes: ['text', 'select', 'radio', 'checkbox', 'textarea'],
+
   },
   getters: {},
   actions: {
+    async saveSurvey({commit}, survey){
+      let response;
+      if(survey.id){
+        response = await axiosClient.put(`/survey/${survey.id}`, survey)
+        commit('updateSurvey', response.data)
+        // return response
+      }else {
+        response = await axiosClient.post('/survey', survey)
+        commit('saveSurvey', response.data)
+        // return response
+      }
+      return response
+    },
     async register({commit}, user){
       try {
         const  {data} = await axiosClient.post('/register', user)
@@ -126,6 +141,17 @@ const store = createStore({
 
   },
   mutations:{
+    saveSurvey: (state, survey) =>{
+      state.surveys = [...state.surveys, survey.data]
+    },
+    updateSurvey: (state, survey) => {
+      state.surveys = state.surveys.map(s => {
+        if(s.id === survey.data.id){
+          return survey
+        }
+        return s
+      })
+    },
     logout: state => {
       state.user.data = {}
       state.user.token = null
