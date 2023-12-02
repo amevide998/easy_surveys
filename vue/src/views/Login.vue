@@ -6,6 +6,12 @@
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
             <form class="space-y-6" @submit="login">
+                <div v-if = "errorMsg" class="py-3 px-5 bg-red-500 text-white rounded">
+                    {{errorMsg}}
+                    <span @click="errorMsg = ''">
+                        X
+                    </span>
+                </div>
                 <div>
                     <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
                     <div class="mt-2">
@@ -50,7 +56,6 @@
                         </label>
                     </div>
                 </div>
-
                 <div>
                     <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
                 </div>
@@ -69,6 +74,7 @@
 <script setup>
 import store from "../store/index.js"
 import {useRouter} from "vue-router"
+import {ref} from "vue";
 
 const user = {
     email : '',
@@ -76,14 +82,21 @@ const user = {
     remember: false
 }
 
+let errorMsg = ref('')
+
 const router = useRouter()
 
 async function login(ev){
     ev.preventDefault()
-    await store.dispatch('login', user)
-    await router.push({
-        name: 'Dashboard'
-    })
+    try {
+        await store.dispatch('login', user)
+        await router.push({
+            name: 'Dashboard'
+        })
+    }catch (err){
+        errorMsg = await err.response.data.error
+    }
+
 
 }
 
