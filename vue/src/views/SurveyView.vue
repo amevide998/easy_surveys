@@ -147,6 +147,21 @@ if(route.params.id){
                     </div>
 
 <!--                    Survey Fields-->
+                    <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+                        <h3 class="text-2xl font-semibold flex items-center justify-between">
+                            <button>
+                                Questions
+
+                            </button>
+                            <div>
+                                + Add Question
+                            </div>
+                        </h3>
+                        <div v-if="!model.questions.length" class="text-center text-gray-600">
+                            You Dont Have any questions yet
+
+                        </div>
+                    </div>
                     <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                         <button
                             type="submit"
