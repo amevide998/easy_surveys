@@ -1,89 +1,3 @@
-<script setup>
-import PageComponent from "../components/PageComponent.vue";
-import {ref, watch} from "vue";
-import store from "../store/index.js";
-import {useRoute, useRouter} from "vue-router";
-import QuestionEditor from "../components/editor/QuestionEditor.vue";
-import {v4} from "uuid";
-
-
-const route = useRoute()
-const router = useRouter()
-
-// create empty survey
-let model = ref({
-    title: "",
-    status: false,
-    description: null,
-    image: null,
-    expire_date: null,
-    questions: []
-})
-
-// watch curren survey
-watch(
-    () => store.state.currentSurvey.data,
-    (newVal, oldVal) => {
-        model.value = {
-            ...JSON.parse(JSON.stringify(newVal)),
-            status: newVal.status !== 'draft'
-        }
-    }
-)
-
-if(route.params.id){
-    store.dispatch('getSurvey', route.params.id)
-}
-
-function onChooseImageFile(ev){
-    const file = ev.target.files[0]
-    const reader = new FileReader()
-
-    // callback on load
-    reader.onload = () => {
-        model.value.image = reader.result
-        model.value.image_url = reader.result
-    }
-
-    reader.readAsDataURL(file)
-}
-
-function addQuestion(index){
-    const newQuestion = {
-        id: v4(),
-        type: 'text',
-        question: '',
-        description: null,
-        data: {}
-    }
-
-    model.value.questions.splice(index, 0, newQuestion)
-}
-
-function deleteQuestion(question){
-    model.value.questions = model.value.questions.filter(q => q.id !== question.id)
-}
-
-function questionChange(question){
-    model.value.questions = model.value.questions.map(q=> {
-        if(q.id === question.id){
-            return JSON.parse(JSON.stringify(question))
-        }
-        return q
-    })
-}
-
-async function saveSurvey(){
-    const {data} = await store.dispatch('saveSurvey', model.value)
-    await router.push({
-        name: 'SurveyView',
-        params: {
-            id: data.data.id
-        }
-    })
-}
-</script>
-
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <PageComponent>
         <template v-slot:header>
@@ -130,7 +44,6 @@ async function saveSurvey(){
                     </div>
 
 <!--                    Title-->
-
                     <div>
                         <label for="title" class="block font-medium text-gray-700">
                             Title
@@ -216,7 +129,7 @@ async function saveSurvey(){
                                 + Add Question
                             </div>
                         </h3>
-                        <div v-if="!model.questions.length" class="text-center text-gray-600">
+                        <div v-if="!model.questions" class="text-center text-gray-600">
                             You Dont Have any questions yet
                         </div>
                         <div v-for="(question, index) in model.questions" :key="question.id">
@@ -242,6 +155,91 @@ async function saveSurvey(){
         </form>
     </PageComponent>
 </template>
+
+<script setup>
+import PageComponent from "../components/PageComponent.vue";
+import {ref, watch} from "vue";
+import store from "../store/index.js";
+import {useRoute, useRouter} from "vue-router";
+import QuestionEditor from "../components/editor/QuestionEditor.vue";
+import {v4} from "uuid";
+
+const route = useRoute()
+const router = useRouter()
+
+// create empty survey
+let model = ref({
+    title: "",
+    status: false,
+    description: null,
+    image: null,
+    expired_date: null,
+    questions: []
+})
+
+// watch current survey
+watch(
+    () => store.state.currentSurvey.data,
+    (newVal, oldVal) => {
+        model.value = {
+            ...JSON.parse(JSON.stringify(newVal)),
+            status: newVal.status !== 'draft'
+        }
+    }
+)
+
+if(route.params.id){
+    store.dispatch('getSurvey', route.params.id)
+}
+
+function onChooseImageFile(ev){
+    const file = ev.target.files[0]
+    const reader = new FileReader()
+
+    // callback on load
+    reader.onload = () => {
+        model.value.image = reader.result
+        model.value.image_url = reader.result
+    }
+
+    reader.readAsDataURL(file)
+}
+
+function addQuestion(index){
+    const newQuestion = {
+        id: v4(),
+        type: 'text',
+        question: '',
+        description: null,
+        data: {}
+    }
+
+    model.value.questions.splice(index, 0, newQuestion)
+}
+
+function deleteQuestion(question){
+    model.value.questions = model.value.questions.filter(q => q.id !== question.id)
+}
+
+function questionChange(question){
+    model.value.questions = model.value.questions.map(q=> {
+        if(q.id === question.id){
+            return JSON.parse(JSON.stringify(question))
+        }
+        return q
+    })
+}
+
+async function saveSurvey(){
+    const {data} = await store.dispatch('saveSurvey', model.value)
+    await router.push({
+        name: 'SurveyView',
+        params: {
+            id: data.data.id
+        }
+    })
+}
+</script>
 
 <style scoped>
 
