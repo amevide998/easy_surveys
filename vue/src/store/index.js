@@ -87,13 +87,31 @@ const store = createStore({
       data: {},
       token: sessionStorage.getItem('TOKEN')
     },
+    currentSurvey: {
+      loading: false,
+      data: {}
+    },
     surveys: [...tmpSurveys],
     questionTypes: ['text', 'select', 'radio', 'checkbox', 'textarea'],
 
   },
   getters: {},
   actions: {
-    async saveSurvey({commit}, survey){
+    async getSurvey({commit}, id){
+      try {
+        commit('setCurrentSurveyLoading', true)
+        const response = await axiosClient.get(
+          `/survey/${id}`
+        )
+        commit('setCurrentSurvey', response.data)
+        commit('setCurrentSurveyLoading', false)
+        return response
+      }catch (err){
+        commit('setCurrentSurveyLoading', false)
+        throw err
+      }
+    }
+    ,async saveSurvey({commit}, survey){
       delete survey.image_url
       let response;
       if(survey.id){
@@ -142,6 +160,12 @@ const store = createStore({
 
   },
   mutations:{
+    setCurrentSurveyLoading(state, loading){
+      state.currentSurvey.loading = loading
+    },
+    setCurrentSurvey(state, survey){
+      state.currentSurvey.data = survey.data
+    },
     saveSurvey: (state, survey) =>{
       state.surveys = [...state.surveys, survey.data]
     },
