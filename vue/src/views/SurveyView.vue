@@ -1,6 +1,6 @@
 <script setup>
 import PageComponent from "../components/PageComponent.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import store from "../store/index.js";
 import {useRoute, useRouter} from "vue-router";
 import QuestionEditor from "../components/editor/QuestionEditor.vue";
@@ -20,10 +20,19 @@ let model = ref({
     questions: []
 })
 
+// watch curren survey
+watch(
+    () => store.state.currentSurvey.data,
+    (newVal, oldVal) => {
+        model.value = {
+            ...JSON.parse(JSON.stringify(newVal)),
+            status: newVal.status !== 'draft'
+        }
+    }
+)
+
 if(route.params.id){
-    model.value = store.state.surveys.find(
-        (s) => s.id === parseInt(route.params.id.toString())
-    );
+    store.dispatch('getSurvey', route.params.id)
 }
 
 function onChooseImageFile(ev){
