@@ -116,11 +116,11 @@ const store = createStore({
       let response;
       if(survey.id){
         response = await axiosClient.put(`/survey/${survey.id}`, survey)
-        commit('updateSurvey', response.data)
+        commit('setCurrentSurvey', response.data)
         // return response
       }else {
         response = await axiosClient.post('/survey', survey)
-        commit('saveSurvey', response.data)
+        commit('setCurrentSurvey', response.data)
         // return response
       }
       return response
