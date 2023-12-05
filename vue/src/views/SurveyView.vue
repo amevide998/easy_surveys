@@ -20,7 +20,7 @@
                             <img
                                 v-if="model.image_url"
                                 :src="model.image_url"
-                                :alt="model.image"
+                                :alt="model.image_url"
                                 class="w-64 h-48 object-cover"
                             >
                             <span
@@ -172,7 +172,7 @@ let model = ref({
     title: "",
     status: false,
     description: null,
-    image: null,
+    image: 'null',
     expired_date: null,
     questions: []
 })
@@ -185,6 +185,8 @@ watch(
             ...JSON.parse(JSON.stringify(newVal)),
             status: newVal.status !== 'draft'
         }
+
+        console.log('cek model value', model.value)
     }
 )
 
@@ -238,6 +240,8 @@ async function saveSurvey(){
             id: data.data.id
         }
     })
+    await store.dispatch('getSurvey', route.params.id)
+
 }
 </script>
 
