@@ -8,6 +8,7 @@ use App\Http\Resources\SurveyResource;
 use App\Models\Survey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 class SurveyController extends Controller
@@ -58,16 +59,16 @@ class SurveyController extends Controller
     public function update(UpdateSurveyRequest $request, Survey $survey)
     {
         //
+
         $data = $request->validated();
 
-        // save image
-        if(isset($data['image'])){
+        if(isset($data['image']) && ($data['image'] !== URL::to($survey->image))){
             $image_url = $this->saveImage($data['image']);
             $data['image'] = $image_url;
 
             //  if there is an old image, delete it
-            if($data->image){
-                $absolutePath = public_path($data->image);
+            if($survey->image){
+                $absolutePath = public_path($survey->image);
                 File::delete($absolutePath);
             }
         }
