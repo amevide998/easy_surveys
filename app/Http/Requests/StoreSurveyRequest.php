@@ -35,7 +35,8 @@ class StoreSurveyRequest extends FormRequest
             'user_id'=>'exists:users,id',
             'status'=>'required|boolean',
             'description'=>'nullable|string',
-            'expired_date'=>'nullable|date|after:tomorrow'
+            'expired_date'=>'nullable|date|after:tomorrow',
+            'questions'=>'array'
         ];
     }
 }
