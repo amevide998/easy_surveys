@@ -48,7 +48,9 @@ import PageComponent from "../components/PageComponent.vue";
 import store from "../store/index.js";
 import {computed} from "vue";
 
-const surveys = computed(()=> store.state.surveys)
+const surveys = computed(()=> store.state.surveys.data)
+
+store.dispatch('getSurveys')
 
 async function deleteSurvey(survey){
     if(confirm(`are you sure to delete ${survey} ? `)){
