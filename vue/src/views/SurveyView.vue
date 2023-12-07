@@ -134,9 +134,13 @@
                             <button>
                                 Questions
                             </button>
-                            <div class="cursor-pointer border border-gray-300 py-2 px-3 rounded-md hover:bg-gray-300">
+                            <button
+                                class="cursor-pointer border border-gray-300 py-2 px-3 rounded-md hover:bg-gray-300"
+                                type="button"
+                                @click="addQuestion()"
+                            >
                                 + Add Question
-                            </div>
+                            </button>
                         </h3>
                         <div v-if="!model.questions" class="text-center text-gray-600">
                             You Dont Have any questions yet
