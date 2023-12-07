@@ -100,9 +100,9 @@
                         </label>
                         <input
                             type="date"
-                            name="expire_date"
-                            id="expire_date"
-                            v-model="model.expire_date"
+                            name="expired_date"
+                            id="expired_date"
+                            v-model="model.expired_date"
                             class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         >
                     </div>
@@ -187,16 +187,16 @@ let model = ref({
     questions: []
 })
 
+
 // watch current survey
 watch(
     () => store.state.currentSurvey.data,
     (newVal, oldVal) => {
         model.value = {
             ...JSON.parse(JSON.stringify(newVal)),
-            status: newVal.status !== 'draft'
+            status: newVal.status !== 'draft',
+            expired_date: newVal.expired_date ? newVal.expired_date.split(' ')[0] : null
         }
-
-        console.log('cek model value', model.value)
     }
 )
 
@@ -245,12 +245,12 @@ function questionChange(question){
 async function saveSurvey(){
     const {data} = await store.dispatch('saveSurvey', model.value)
     await router.push({
-        name: 'SurveyView',
-        params: {
-            id: data.data.id
-        }
+        name: 'Surveys',
+        // params: {
+        //     id: data.data.id
+        // }
     })
-    await store.dispatch('getSurvey', route.params.id)
+    // await store.dispatch('getSurvey', route.params.id)
 
 }
 
@@ -258,7 +258,7 @@ async function deleteSurvey(){
     if(confirm('are you sure want delete this survey ?')){
         await store.dispatch('deleteSurvey', model.value.id)
         await router.push({
-            name: 'SurveyView'
+            name: 'Surveys'
         })
     }
 }

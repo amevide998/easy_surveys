@@ -31,7 +31,7 @@ class SurveyController extends Controller
         //
         $req = $request->validated();
 
-        if(isset($req['image'])){
+        if($req['image'] !== 'null'){
             $image_url = $this->saveImage($req['image']);
             $req['image'] = $image_url;
         }
@@ -59,7 +59,6 @@ class SurveyController extends Controller
     public function update(UpdateSurveyRequest $request, Survey $survey)
     {
         //
-
         $data = $request->validated();
 
         if(isset($data['image']) && ($data['image'] !== URL::to($survey->image))){
