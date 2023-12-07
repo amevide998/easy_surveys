@@ -2,85 +2,6 @@ import {createStore} from "vuex"
 import axiosClient from "../axios.js";
 
 
-const tmpSurveys = [
-  {
-    id: 99,
-    title: 'what javascript framework you like',
-    slug: 'what-javascript-framework-you-like',
-    status: 'draft',
-    image: '../assets/img_example.jpeg',
-    description: 'i want to find out, what javascript framework is most love by developer',
-    created_at: '2023-12-01 20:00:00',
-    updated_at: '2023-12-01 20:00:00',
-    expire_date: '2023-12-31 20:00:00',
-    questions: [
-      {
-        id: 1,
-        type: 'select',
-        question: 'from which country are you ?',
-        description: null,
-        data: {
-          options : [
-            {uuid: '38379e70-509b-4339-8052-e0ced588566e', text: 'MOLDOVA'},
-            {uuid: 'f4bcc731-938e-49e5-84a5-717df326e993', text: 'FIJI'},
-            {uuid: '1b727d18-e131-4a44-9d3a-818c6805e7a3', text: 'LUXEMBURG'},
-            {uuid: '8d7068e5-7610-4cd0-b6a9-fa96174ba040', text: 'BOSTWANA'}
-          ]
-        }
-      },
-      {
-        id: 2,
-        type: 'checkbox',
-        question: 'what is your role ?',
-        description: null,
-        data: {
-          options : [
-            {uuid: '38379e70-509b-938e-8052-e0ced588566e', text: 'Front End Developer'},
-            {uuid: 'f4bcc731-938e-938e-84a5-717df326e993', text: 'Back End Developer'},
-            {uuid: '1b727d18-e131-938e-9d3a-818c6805e7a3', text: 'UI/UX Designer'},
-            {uuid: '8d7068e5-7610-938e-b6a9-fa96174ba040', text: 'Business Analyst'}
-          ]
-        }
-      },
-      {
-        id: 3,
-        type: 'checkbox',
-        question: 'what javascript framework do you use ?',
-        description: null,
-        data: {
-          options : [
-            {uuid: '38379e70-509b-e131-8052-e0ced588566e', text: 'Svelte'},
-            {uuid: 'f4bcc731-938e-e131-84a5-717df326e993', text: 'React'},
-            {uuid: '1b727d18-e131-e131-9d3a-818c6805e7a3', text: 'Vue'},
-            {uuid: '8d7068e5-7610-e131-b6a9-fa96174ba040', text: 'Angular'}
-          ]
-        }
-      },
-      {
-        id: 4,
-        type: 'text',
-        question: 'what javascript framework you most love and why ?',
-        description: 'write your honest opinion, everything is anonymous',
-        data: {}
-      },
-    ]
-  },
-  {
-    id: 199,
-    title: 'javascript backend framework',
-    slug: 'javascript-backend-framework',
-    status: 'draft',
-    image: '../assets/img_example.jpeg',
-    description: 'i want to find out, what javascript backend framework is most love by developer',
-    created_at: '2023-12-01 20:00:00',
-    updated_at: '2023-12-01 20:00:00',
-    expire_date: '2023-12-31 20:00:00',
-    questions: [
-
-    ]
-  }
-]
-
 const store = createStore({
   state: {
     user: {
@@ -91,7 +12,10 @@ const store = createStore({
       loading: false,
       data: {}
     },
-    surveys: [...tmpSurveys],
+    surveys: {
+      loading: false,
+      data: []
+    },
     questionTypes: ['text', 'select', 'radio', 'checkbox', 'textarea'],
 
   },
@@ -110,6 +34,24 @@ const store = createStore({
         commit('setCurrentSurveyLoading', false)
         throw err
       }
+    },
+    async getSurveys({commit}){
+      try {
+        commit('setSurveyLoading', true)
+        const response = await axiosClient.get(
+          `/survey`
+        )
+
+        commit('setSurvey', response.data.data)
+        commit('setSurveyLoading', false)
+        return response
+      }catch (err){
+        commit('setSurveyLoading', false)
+        throw err
+      }
+    }
+    ,async deleteSurvey({commit}, id){
+      await axiosClient.delete(`/survey/${id}`)
     }
     ,async saveSurvey({commit}, survey){
       delete survey.image_url
@@ -165,6 +107,12 @@ const store = createStore({
     },
     setCurrentSurvey(state, survey){
       state.currentSurvey.data = survey.data
+    },
+    setSurveyLoading(state, loading){
+      state.surveys.loading = loading
+    },
+    setSurvey(state, survey){
+      state.surveys.data = survey
     },
     saveSurvey: (state, survey) =>{
       state.surveys = [...state.surveys, survey.data]
