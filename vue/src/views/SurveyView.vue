@@ -5,6 +5,12 @@
                 <h1 class="text-3xl font-bold text-gray-900">
                     {{route.params.id ? model.title: 'create a Survey'}}
                 </h1>
+                <button v-if="route.params.id"
+                        type="button"
+                        class="bg-red-500 hover:bg-red-700 px-3 py-2 text-gray-50 font-bold rounded"
+                        @click="deleteSurvey">
+                    Delete
+                </button>
             </div>
         </template>
         <div v-if="surveyLoading" class="flex justify-center items-center">
@@ -247,6 +253,16 @@ async function saveSurvey(){
     await store.dispatch('getSurvey', route.params.id)
 
 }
+
+async function deleteSurvey(){
+    if(confirm('are you sure want delete this survey ?')){
+        await store.dispatch('deleteSurvey', model.value.id)
+        await router.push({
+            name: 'SurveyView'
+        })
+    }
+}
+
 </script>
 
 <style scoped>
