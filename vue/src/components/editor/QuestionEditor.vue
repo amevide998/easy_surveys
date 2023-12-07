@@ -30,11 +30,17 @@ function setOptions(options){
 }
 
 function addOptions(){
-    setOptions(
-        [...getOptions(),
+    if(!getOptions()){
+        setOptions([
             {uuid: v4(), text:""}
-        ]
-    )
+        ])
+    }else {
+        setOptions(
+            [...getOptions(),
+                {uuid: v4(), text:""}
+            ]
+        )
+    }
     dataChange()
 }
 
@@ -65,9 +71,8 @@ function deleteQuestion(){
 <template>
     <div class="flex items-center justify-between">
         <h3 class="text-lg font-bold">
-            {{index + 1}}, {{model.question}}
+            {{index + 1}}. {{model.question}}
         </h3>
-
         <div class="flex items-center">
 <!--            add new question -->
             <button
@@ -156,7 +161,6 @@ function deleteQuestion(){
     <div v-if="shouldHaveOptions()" class="mt-2">
         <h4 class="text-sm font-semibold mb-1 flex justify-between items-center">
             Options
-
 <!--            Add New Options-->
             <button
                 type="button"
@@ -168,7 +172,7 @@ function deleteQuestion(){
         </h4>
 
         <div
-            v-if="!model.data.options.length"
+            v-if="!model.data.options"
             class="text-xs text-gray-600 text-center py-3"
         >
             You dont have any options defined
