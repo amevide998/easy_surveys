@@ -15,6 +15,17 @@ if(question.type === 'checkbox'){
     })
 }
 
+function onCheckBoxChange(){
+    console.log('cek box : ', model.value)
+    const selectedOptions = []
+    for(let option in model.value){
+        if(model.value[option]){
+            selectedOptions.push(option)
+        }
+    }
+    emits('update:modelValue', selectedOptions)
+}
+
 </script>
 
 <template>
