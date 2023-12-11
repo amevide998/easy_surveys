@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,6 +25,10 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::resource('/survey', \App\Http\Controllers\SurveyController::class);
 });
+
+Route::get('/survey-by-slug/{survey:slug}'
+    , [\App\Http\Controllers\SurveyController::class, 'showForGuest']
+);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
