@@ -91,6 +91,10 @@ const store = createStore({
       }
 
     },
+
+    async saveSurveyAnswer({commit}, {surveyId, answers}){
+      return await axiosClient.post(`/survey/${surveyId}/answer`, {answers})
+    },
     async register({commit}, user){
       try {
         const  {data} = await axiosClient.post('/register', user)
