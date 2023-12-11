@@ -19,6 +19,7 @@ const store = createStore({
     questionTypes: ['text', 'select', 'radio', 'checkbox', 'textarea'],
     notification: {
       show: false,
+      type: null,
       message: null
     }
 
