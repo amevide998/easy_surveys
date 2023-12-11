@@ -84,7 +84,6 @@ function submitAnotherResponse(){
                 <div v-for="(question, index) of survey.questions"
                      :key="question.id"
                      class="mt-5"
-                     @change="questionChanged(question)"
                 >
                     <QuestionViewer
                         v-model="answers[question.id]"
