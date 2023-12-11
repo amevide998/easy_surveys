@@ -1,5 +1,41 @@
 <script setup>
 
+import QuestionViewer from "../components/viewer/QuestionViewer.vue";
+import {computed, ref} from "vue";
+import {useRoute} from "vue-router";
+import {useStore} from "vuex";
+
+const store = useStore()
+const route = useRoute()
+
+const loading = computed(() => store.state.currentSurvey.loading)
+const survey = computed(() => store.state.currentSurvey.data)
+const surveyFinished = ref(false)
+
+const answers = ref({})
+
+store.dispatch("getSurveyBySlug", route.params.slug)
+
+async function submitSurvey(){
+    console.log(JSON.stringify(answers.value, undefined, 2))
+    const response = await store
+        .dispatch("saveSurveyAnswer", {
+            surveyId: survey.value.id,
+            answers: answers.value
+        })
+
+    if(response.status === 201){
+        surveyFinished.value = true
+
+    }
+}
+
+
+function submitAnotherResponse(){
+    answers.value = {}
+    surveyFinished.value = false
+}
+
 </script>
 
 <template>
@@ -43,7 +79,7 @@
                     Submit another response
                 </button>
             </div>
-            <div v-else>
+            <div v-else class="ml-4">
                 <hr class="my-3">
                 <div v-for="(question, index) of survey.questions"
                      :key="question.id"
