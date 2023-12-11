@@ -10,9 +10,12 @@
                     + Add New Surveys
                 </router-link>
             </div>
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+            <div v-if="surveys.loading" class="flex justify-center">Loading ...</div>
+            <div v-else class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
                 <SurveyListItem
-                    v-for="survey in surveys"
+                    v-for="(survey, index) in surveys.data"
+                    class='opacity-0 animate-fade-in-down'
+                    :style="{animationDelay: `${index * 0.1}s`}"
                     :key="survey.id"
                     :survey="survey"
                     @delete="deleteSurvey(survey)"
@@ -28,7 +31,7 @@ import store from "../store/index.js";
 import {computed} from "vue";
 import SurveyListItem from "../components/SurveyListItem.vue";
 
-const surveys = computed(()=> store.state.surveys.data)
+const surveys = computed(()=> store.state.surveys)
 
 store.dispatch('getSurveys')
 

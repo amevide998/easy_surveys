@@ -140,6 +140,16 @@ const store = createStore({
       state.user.token = userData.token
       state.user.data = userData.user
       sessionStorage.setItem("TOKEN", userData.token)
+    },
+    notify : (state, {type, message}) => {
+      state.notification = {
+        show: true,
+        type,
+        message
+      }
+      setTimeout(() => {
+        state.notification.show = false
+      }, 3000)
     }
   },
   modules: {}

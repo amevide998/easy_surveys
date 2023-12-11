@@ -16,7 +16,7 @@
         <div v-if="surveyLoading" class="flex justify-center items-center">
             Loading ...
         </div>
-        <form v-else @submit.prevent="saveSurvey">
+        <form v-else @submit.prevent="saveSurvey" class="animate-fade-in-down">
             <div class="shadow sm:rounded-md sm:overflow-hidden">
                 <!--Survey field-->
                 <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
@@ -247,20 +247,24 @@ function questionChange(question){
 }
 
 async function saveSurvey(){
-    const {data} = await store.dispatch('saveSurvey', model.value)
+    await store.dispatch('saveSurvey', model.value)
+    store.commit('notify', {
+        type: 'success',
+        message: 'survey was saved successfully'
+    })
     await router.push({
         name: 'Surveys',
-        // params: {
-        //     id: data.data.id
-        // }
     })
-    // await store.dispatch('getSurvey', route.params.id)
 
 }
 
 async function deleteSurvey(){
     if(confirm('are you sure want delete this survey ?')){
         await store.dispatch('deleteSurvey', model.value.id)
+        store.commit('notify', {
+            type: 'success',
+            message: 'survey was deleted successfully'
+        })
         await router.push({
             name: 'Surveys'
         })

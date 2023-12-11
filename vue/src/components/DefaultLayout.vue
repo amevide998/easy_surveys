@@ -105,12 +105,14 @@
         </Disclosure>
 
        <router-view></router-view>
+        <Notification />
     </div>
 </template>
 
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import Notification from "./Notification.vue"
 import {useStore} from "vuex"
 import {computed} from "vue";
 import {useRouter} from "vue-router";
