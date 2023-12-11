@@ -75,6 +75,22 @@ const store = createStore({
       }
       return response
     },
+
+    async getSurveyBySlug({commit}, slug){
+      try {
+        commit('setCurrentSurveyLoading', true)
+        const response = await axiosClient.get(
+          `/survey-by-slug/${slug}`
+        )
+        commit('setCurrentSurvey', response.data)
+        commit('setCurrentSurveyLoading', false)
+        return response
+      }catch (err){
+        commit('setCurrentSurveyLoading', false)
+        throw err
+      }
+
+    },
     async register({commit}, user){
       try {
         const  {data} = await axiosClient.post('/register', user)
