@@ -32,6 +32,8 @@ Route::get('/survey-by-slug/{survey:slug}'
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/survey/{survey}/answer', [\App\Http\Controllers\SurveyController::class, 'storeAnswer']);
+
 
 Route::get('/test', function ()
 {
