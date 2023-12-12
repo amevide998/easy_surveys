@@ -84,7 +84,6 @@ const store = createStore({
         // return response
       }else {
         response = await axiosClient.post('/survey', survey)
-        console.log('store/index/actions/saveSurvey, response : ', response)
         commit('setCurrentSurvey', response.data)
         // return response
       }
@@ -123,7 +122,6 @@ const store = createStore({
     async login({commit}, user){
       try {
         const  {data} = await axiosClient.post('/login', user)
-        // const data = response.data
         commit('setUser', data)
         return data
       }catch (err){
@@ -138,7 +136,6 @@ const store = createStore({
         commit('logout')
         return response
       }catch (err){
-        console.log('err - store/index/actions/logout, errmsg : ', err)
         throw err
       }
     }
