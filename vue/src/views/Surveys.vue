@@ -5,12 +5,15 @@
                 <h1 class="text-3xl font-bold tracking-tight text-gray-900">Surveys </h1>
                 <router-link
                     :to="{name: 'SurveyCreate'}"
-                    class="py-2 px-3 bg-lime-300 rounded-md hover:bg-lime-700"
+                    class="py-2 px-3 rounded-md"
                 >
-                    + Add New Surveys
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-[#5C8374] hover:text-[#1B4242]">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                 </router-link>
             </div>
             <div v-if="surveys.loading" class="flex justify-center">Loading ...</div>
+            <div v-else-if="surveys.data.length === 0" class="flex justify-center">No Surveys Found</div>
             <div v-else>
                 <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
                     <SurveyListItem
