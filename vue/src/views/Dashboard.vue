@@ -3,6 +3,9 @@
         <div v-if="loading" class="flex justify-center items-center h-screen">
             Loading ...
         </div>
+        <div v-else-if="!data" class="flex justify-center items-center h-screen">
+            Empty
+        </div>
         <div v-else
              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-gray-700"
         >
@@ -30,6 +33,7 @@
             </div>
             <div
                 class="animate-fade-in-down row-span-2 order-3 lg:order-1 bg-white shadow-md p-4"
+                v-if="data.latestSurvey"
             >
                 <h3 class="text-2xl font-semibold">Latest Survey</h3>
                 <img
@@ -94,6 +98,15 @@
                 </div>
             </div>
             <div
+                class="animate-fade-in-down row-span-2 order-3 lg:order-1 bg-white shadow-md p-4"
+                v-else
+            >
+                <h3 class="text-2xl font-semibold">Latest Survey</h3>
+                <p class="text-sm text-gray-500"
+                >There is no surveys yet</p>
+            </div>
+
+                <div
                 class="animate-fade-in-down bg-white shadow-md p-3 row-span-2 order-4 lg:order-3"
                 style="animation-delay: 0.3s"
             >
@@ -127,8 +140,8 @@ import {computed} from "vue"
 
 const store = useStore()
 
-const loading = computed(() => store.state.dashboard.loading)
 const data = computed(() => store.state.dashboard.data)
+const loading = computed(() => store.state.dashboard.loading)
 
 store.dispatch('getDashboardData')
 
