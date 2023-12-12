@@ -38,11 +38,21 @@
                                         <span class="absolute -inset-1.5" />
                                         <span class="sr-only">Open user menu</span>
                                         <div class="border border-[#092635] rounded-full ">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-8 h-8">
+                                            <svg v-if="!user.data.image_url"
+                                                 xmlns="http://www.w3.org/2000/svg"
+                                                 fill="none" viewBox="0 0 24 24"
+                                                 stroke-width="1"
+                                                 stroke="currentColor"
+                                                 class="w-8 h-8"
+                                            >
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                                             </svg>
+                                            <img v-else
+                                                 class="h-8 w-8 rounded-full"
+                                                 :src="user.data.image_url"
+                                                 alt="profile picture"
+                                            />
                                         </div>
-<!--                                        <img class="h-8 w-8 rounded-full" :src="user.data.image_url" alt="profile picture" />-->
                                     </MenuButton>
                                 </div>
                                 <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
