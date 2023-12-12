@@ -18,8 +18,8 @@ class SurveyResourceDashboard extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'image'=> $this->image !== 'null' ? URL::to($this->image) : null,
-            'image_url'=> $this->image !== 'null' ? URL::to($this->image) : null,
+            'image'=> $this->image !== 'null' ? explode(' ', $this->image)[1] : null,
+            'image_url'=> $this->image !== 'null' ? explode(' ', $this->image)[1] : null,
             'title'=>$this->title,
             'slug'=>$this->slug,
             'status'=>$this->status !== 'draft',
