@@ -2,7 +2,7 @@ import store from "./store/index.js";
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:8000/api'
+  baseURL: `${import.meta.env.VITE_BASE_API_URL}/api`
 })
 
 axiosClient.interceptors.request.use(config => {
