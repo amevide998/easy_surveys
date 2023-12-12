@@ -12,10 +12,12 @@ use App\Models\SurveyQuestion;
 use App\Models\SurveyQuestionAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use ImageKit\ImageKit;
 
 class SurveyController extends Controller
 {
@@ -38,7 +40,7 @@ class SurveyController extends Controller
         $req = $request->validated();
 
         if($req['image'] !== 'null'){
-            $image_url = $this->saveImage($req['image']);
+            $image_url = $this->saveImageToImageKit($req['image']);
             $req['image'] = $image_url;
         }
 
@@ -114,18 +116,18 @@ class SurveyController extends Controller
         $data = $request->validated();
 
         if(isset($data['image']) && ($data['image'] !== URL::to($survey->image))){
-            $image_url = $this->saveImage($data['image']);
+//            $image_url = $this->saveImage($data['image']);
+            $image_url = $this->saveImageToImageKit($data['image']);
             $data['image'] = $image_url;
 
             //  if there is an old image, delete it
             if($survey->image){
-                $absolutePath = public_path($survey->image);
-                File::delete($absolutePath);
+                $file_id = explode(' ', $survey->image)[0];
+                $this->deleteImageInImageKit($file_id);
             }
         }
 
         $survey->update($data);
-
 
         // update questions
 
@@ -160,8 +162,6 @@ class SurveyController extends Controller
             }
         }
 
-
-
         return new SurveyResource($survey);
     }
 
@@ -178,8 +178,8 @@ class SurveyController extends Controller
         }
 
         if($survey->image){
-            $absolutePath = public_path($survey->image);
-            File::delete($absolutePath);
+            $file_id = explode(' ', $survey->image)[0];
+            $this->deleteImageInImageKit($file_id);
         }
 
         $survey->delete();
@@ -220,6 +220,40 @@ class SurveyController extends Controller
         file_put_contents($relativePath, $image);
 
         return $relativePath;
+    }
+
+    private function saveImageToImageKit($image){
+        if(preg_match('/^data:image\/(\w+);base64,/', $image, $type)){
+            $imageKit = new ImageKit(
+                "public_WGQgC7V46u459/mBGdez2UMuw0E=",
+                "private_xOvYzCHYeqmZIWnKz03LtjHLnLw=",
+                "https://ik.imagekit.io/ji6tgj9ur"
+            );
+
+            // For URL Generation, works for both images and videos
+
+            // For File Upload
+            $uploadFile = $imageKit->uploadFile([
+                'file' => $image, # required, "binary","base64" or "file url"
+                'fileName' =>  Str::random() . '.' . $type[1], # required
+            ]);
+
+            return $uploadFile->result->fileId . ' ' . $uploadFile->result->url;
+
+        }else{
+            throw new \Exception('didnt match data uri with image data');
+        }
+
+    }
+
+
+    private function deleteImageInImageKit($fileId){
+        $imageKit = new ImageKit(
+            "public_WGQgC7V46u459/mBGdez2UMuw0E=",
+            "private_xOvYzCHYeqmZIWnKz03LtjHLnLw=",
+            "https://ik.imagekit.io/ji6tgj9ur"
+        );
+        return $imageKit->deleteFile($fileId);
     }
 
     private function createQuestion(mixed $question)
