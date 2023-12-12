@@ -6,7 +6,7 @@
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
             <form class="space-y-6" @submit="login">
-                <Alert>
+                <Alert v-if="errorMsg">
                     {{errorMsg}}
                     <span @click="errorMsg = ''">
                         X
