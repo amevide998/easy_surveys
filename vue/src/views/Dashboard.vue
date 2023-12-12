@@ -40,7 +40,7 @@
                 <h3 class="font-bold text-xl mb-3">{{ data.latestSurvey.title }}</h3>
                 <div class="flex justify-between text-sm mb-1">
                     <div >
-                        Upload Date :
+                        Create Date :
                     </div>
                     <div>
                         {{data.latestSurvey.created_at}}
