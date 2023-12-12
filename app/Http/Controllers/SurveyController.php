@@ -115,7 +115,7 @@ class SurveyController extends Controller
         //
         $data = $request->validated();
 
-        if(isset($data['image']) && ($data['image'] !== URL::to($survey->image))){
+        if(isset($data['image']) && ($data['image'] !== explode(' ',$survey->image)[1])){
 //            $image_url = $this->saveImage($data['image']);
             $image_url = $this->saveImageToImageKit($data['image']);
             $data['image'] = $image_url;
