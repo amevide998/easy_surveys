@@ -1,15 +1,20 @@
 <template>
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
-            <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
+            <img class="mx-auto h-32 w-auto" src="/simpleq-high-resolution-logo.png" alt="simpleQ Logo" />
+            <h2 class="-mt-5 text-center text-xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
         </div>
-
-        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
             <form class="space-y-6" @submit="login">
-                <Alert v-if="errorMsg">
+                <Alert v-if="errorMsg" class="flex items-center justify-between">
                     {{errorMsg}}
-                    <span @click="errorMsg = ''">
-                        X
+                    <span
+                        @click="errorButtonHandler('')"
+                        class="cursor-pointer"
+                    >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="{1.5}"
+                                 stroke="currentColor" class="w-6 h-6 hover:text-slate-500">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
                     </span>
                 </Alert>
                 <div>
@@ -29,7 +34,7 @@
                     <div class="flex items-center justify-between">
                         <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
                         <div class="text-sm">
-                            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                            <a href="#" class="font-semibold text-[#1B4242] hover:text-[#5C8374]">Forgot password?</a>
                         </div>
                     </div>
                     <div class="mt-2">
@@ -59,7 +64,7 @@
                 <div >
                     <button :disabled="loading"
                             type="submit"
-                            class="flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            class="flex w-full justify-center items-center rounded-md bg-[#5C8374] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#9EC8B9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         <svg v-if="loading"
                              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                              xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +82,7 @@
             <p class="mt-10 text-center text-sm text-gray-500">
                 Not a member?
                 {{ ' ' }}
-                <router-link :to="{name: 'Register'}" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                <router-link :to="{name: 'Register'}" class="font-semibold leading-6 text-[#1B4242] hover:text-[#5C8374]">
                     Register for free
                 </router-link>
             </p>
@@ -90,16 +95,20 @@ import {useRouter} from "vue-router"
 import {ref} from "vue";
 import Alert from "../components/Alert.vue";
 
+
+let errorMsg = ref('')
+let loading = ref(false)
 const user = {
     email : '',
     password: '',
     remember: false
 }
 
-let errorMsg = ref('')
-let loading = ref(false)
-
 const router = useRouter()
+
+const errorButtonHandler = (err) => {
+    errorMsg.value = err
+}
 
 async function login(ev){
     loading.value = true
@@ -109,13 +118,14 @@ async function login(ev){
         await router.push({
             name: 'Dashboard'
         })
-        loading.value = false
     }catch (err){
+        if(err.response.status === 422){
+            errorButtonHandler('Invalid email or password')
+            // errorMsg = 'Invalid email or password'
+        }
+    }finally {
         loading.value = false
-        errorMsg = await err.response.data.error
     }
-
-
 }
 
 </script>
