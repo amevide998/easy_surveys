@@ -115,15 +115,14 @@ class SurveyController extends Controller
         //
         $data = $request->validated();
 
-        if(isset($data['image']) && ($data['image'] !== explode(' ',$survey->image)[1])){
-//            $image_url = $this->saveImage($data['image']);
+        if(isset($data['image']) && !$survey->image){
             $image_url = $this->saveImageToImageKit($data['image']);
             $data['image'] = $image_url;
 
-            //  if there is an old image, delete it
-            if($survey->image){
-                $file_id = explode(' ', $survey->image)[0];
-                $this->deleteImageInImageKit($file_id);
+        }elseif (isset($data['image']) && $survey->image){
+            if($data['image'] !== explode(' ', $survey->image)[1]) {
+                $image_url = $this->saveImageToImageKit($data['image']);
+                $data['image'] = $image_url;
             }
         }
 
