@@ -2,8 +2,8 @@
     <PageComponent>
         <template v-slot:header>
             <div class="flex items-center justify-between">
-                <h1 class="text-3xl font-bold text-gray-900">
-                    {{route.params.id ? model.title: 'create a Survey'}}
+                <h1 class="text-3xl font-bold text-[#1B4242]">
+                    {{route.params.id ? model.title: 'Create a Survey'}}
                 </h1>
                 <button v-if="route.params.id"
                         type="button"
@@ -26,21 +26,23 @@
                             Image
                         </label>
                         <div class="mt-1 flex items-center">
-                            <img
-                                v-if="model.image_url"
-                                :src="model.image_url"
+                            <svg v-if="!model.image_url"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none" viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="w-10 h-10 text-[#1B4242]"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            <img v-else
+                                :src="model.image"
                                 :alt="model.image_url"
-                                class="w-64 h-48 object-cover"
+                                class="w-64 h-48 object-cover border p-1 border-[#9EC8B9]"
                             >
-                            <span
-                                v-else
-                                class="flex items-center justify-center h-12 w-12 rounded-full overflow-hidden bg-gray-100"
-                            >
-                                img-hero
-                            </span>
                             <button
                                 type="button"
-                                class="ml-4 px-4 py-2 relative overflow-hidden border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                class="ml-4 px-4 py-2 relative overflow-hidden border border-[#9EC8B9] text-[#9EC8B9] rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:border-[#1B4242] hover:text-[#1B4242] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
                                 <input
                                     class="absolute top-0 right-0 left-0 bottom-0 opacity-0 cursor-pointer"
@@ -63,7 +65,7 @@
                             id="title"
                             v-model="model.title"
                             autocomplete="survey_title"
-                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            class="mt-1 focus:ring-[#1B4242] focus:border-[#9EC8B9] block w-full shadow-sm sm:text-sm border-[#9EC8B9] rounded-md"
                         >
                     </div>
 
@@ -82,7 +84,7 @@
                                 rows="3"
                                 v-model="model.description"
                                 autocomplete="survey_description"
-                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full border border-gray-300 rounded-md"
+                                class="shadow-sm focus:ring-[#1B4242] focus:border-[#9EC8B9] block w-full border border-[#9EC8B9] rounded-md"
                                 placeholder="Describe your survey"
                             >
 
@@ -103,7 +105,7 @@
                             name="expired_date"
                             id="expired_date"
                             v-model="model.expired_date"
-                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            class="mt-1 focus:ring-[#1B4242] focus:border-[#1B4242] block w-full shadow-sm sm:text-sm border-[#9EC8B9] rounded-md text-[#1B4242]"
                         >
                     </div>
 
