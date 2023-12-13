@@ -76,7 +76,7 @@ const store = createStore({
       await axiosClient.delete(`/survey/${id}`)
     }
     ,async saveSurvey({commit}, survey){
-      delete survey.image_url
+      // delete survey.image_url
       let response;
       if(survey.id){
         response = await axiosClient.put(`/survey/${survey.id}`, survey)
