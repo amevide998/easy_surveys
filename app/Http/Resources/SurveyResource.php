@@ -16,10 +16,11 @@ class SurveyResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $imageExists = explode(' ', $this->image);
         return [
             'id'=>$this->id,
-            'image'=> $this->image !== 'null' ? explode(' ', $this->image)[1] : null,
-            'image_url'=> $this->image !== 'null' ? explode(' ', $this->image)[1] : null,
+            'image'=> !in_array($this->image, ['null', null]) ? end($imageExists) : null,
+            'image_url'=> !in_array($this->image, ['null', null]) ? end($imageExists) : null,
             'title'=>$this->title,
             'slug'=>$this->slug,
             'status'=>$this->status !== 'draft',
