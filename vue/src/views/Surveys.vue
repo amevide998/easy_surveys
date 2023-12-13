@@ -64,7 +64,7 @@ const surveys = computed(()=> store.state.surveys)
 store.dispatch('getSurveys')
 
 async function deleteSurvey(survey){
-    if(confirm(`are you sure to delete ${survey} ? `)){
+    if(confirm(`are you sure to delete this survey ? `)){
         await store.dispatch('deleteSurvey', survey.id)
         await store.dispatch('getSurveys')
     }
