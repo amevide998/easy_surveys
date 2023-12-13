@@ -120,7 +120,8 @@ class SurveyController extends Controller
             $data['image'] = $image_url;
 
         }elseif (isset($data['image']) && $survey->image){
-            if($data['image'] !== explode(' ', $survey->image)[1]) {
+            $imageExists = explode(' ', $survey->image);
+            if($data['image'] !== end($imageExists)){
                 $image_url = $this->saveImageToImageKit($data['image']);
                 $data['image'] = $image_url;
             }
